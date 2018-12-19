@@ -13,7 +13,7 @@ class Note{
   String get date => _date;
 
   set account(String pAccount){
-    if(pAccount.length <=15)
+    if(pAccount.length <=13)
       this._account = pAccount;
   }
 

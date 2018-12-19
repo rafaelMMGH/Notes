@@ -45,6 +45,15 @@ class CardDetailState extends State<CardDetail> {
       appBar: AppBar(
         title: Text(appBarTitle),
         backgroundColor: color,
+        actions: <Widget>[
+          new IconButton(
+              icon: Icon(Icons.check),
+              onPressed: (){
+                setState(() {
+                  _save();
+                })
+              ;})
+        ],
       ),
       body: Padding(padding: EdgeInsets.only(top: 15.0,left: 20.0, right: 20.0),
         child: ListView(
@@ -104,28 +113,7 @@ class CardDetailState extends State<CardDetail> {
               ),
             ),
 
-            Padding(
-              padding: EdgeInsets.only(top: 20.0,bottom: 15.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: RaisedButton(
-                      color: color,
-                      textColor: Colors.white,
-                      child: Text(
-                        'Save',
-                        textScaleFactor: 1.5,
-                      ),
-                      onPressed: (){
-                        setState(() {
-                          _save();
-                        });
-                      },
-                    ),
-                  )
-                ],
-              ),
-            )
+
 
           ],
         ),
@@ -155,15 +143,23 @@ class CardDetailState extends State<CardDetail> {
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
-    if(note.id != null) //update
+    if(note.id != null) { //update
       result = await helper.updateNote(note);
-    else //Insert
+
+      if(result != 0) //Success
+        _showAlert('Saved', 'Card saved successfully');
+      else //Fail
+        _showAlert('Error', 'Problem saving Card');
+    }
+    else { //Insert
       result = await helper.addNote(note);
 
-    if(result != 0) //Success
-      _showAlert('Saved', 'Card saved successfully');
-    else //Fail
-      _showAlert('Error', 'Problem saving Card');
+      if(result != 0) //Success
+        _showAlert('Saved', 'Card saved successfully');
+      else //Fail
+        _showAlert('Error', 'Problem saving Card');
+    }
+
 
   }
 
@@ -198,7 +194,7 @@ class CardDetailState extends State<CardDetail> {
               new FlatButton(
                 child: new Text("Close"),
                 onPressed: () {
-                  moveToLastScreen();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
