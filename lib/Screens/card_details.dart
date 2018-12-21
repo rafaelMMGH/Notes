@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:notes/Model/Note.dart';
 import 'package:notes/Database/DBHelper.dart';
@@ -30,6 +29,20 @@ class CardDetailState extends State<CardDetail> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  bool _accountValidate = false;
+  bool _descriptionValidate = false;
+  bool _passwordValidate = false;
+
+  bool _obscureText = true;
+  IconData _iconPassword = Icons.lock_outline ;
+
+  void _toggle(){
+    setState(() {
+      _obscureText = !_obscureText;
+      _iconPassword = _iconPassword == Icons.lock_outline ? Icons.lock_open : Icons.lock_outline;
+    });
+  }
+
   CardDetailState(this.note,this.appBarTitle,this.color);
 
   @override
@@ -50,15 +63,45 @@ class CardDetailState extends State<CardDetail> {
               icon: Icon(Icons.check),
               onPressed: (){
                 setState(() {
-                  _save();
+
+                  if(accountController.text.isEmpty){
+                    _accountValidate = true;
+                    _descriptionValidate = false;
+                    _passwordValidate = false;
+
+                  }else if(descriptionController.text.isEmpty){
+                    _descriptionValidate = true;
+                    _accountValidate = false;
+                    _passwordValidate = false;
+                  }else if(passwordController.text.isEmpty){
+                    _descriptionValidate = false;
+                    _accountValidate = false;
+                    _passwordValidate = true;
+                  }else{
+                    _save();
+                  }
+
                 })
               ;})
         ],
       ),
       body: Padding(padding: EdgeInsets.only(top: 15.0,left: 20.0, right: 20.0),
         child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           children: <Widget>[
+/*
+            new Hero(
+              tag: 'title-${note.id}',
+              child: new Column(
+                children: <Widget>[
+                  new Text(note.account,style: TextStyle(fontWeight: FontWeight.bold),maxLines: 1,textAlign: TextAlign.center,),
+                  new Padding(padding: new EdgeInsets.symmetric(vertical: 9)),
+                  new Text(note.description, textAlign: TextAlign.center,maxLines: 2,),
+                ],
+              ),
+            ),
 
+*/
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0.0),
               child: TextField(
@@ -68,11 +111,12 @@ class CardDetailState extends State<CardDetail> {
                   updateAccount();
                 },
                 decoration: InputDecoration(
-                  labelText: 'Account',
-                  labelStyle: textStyle,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0)
-                  )
+                    labelText: 'Account',
+                    labelStyle: textStyle,
+                    errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)
+                    )
                 ),
               ),
             ),
@@ -88,6 +132,7 @@ class CardDetailState extends State<CardDetail> {
                 decoration: InputDecoration(
                     labelText: 'Description',
                     labelStyle: textStyle,
+                    errorText: _descriptionValidate ? 'Value Can\'t Be Empty' : null,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0)
                     )
@@ -99,13 +144,16 @@ class CardDetailState extends State<CardDetail> {
               padding: EdgeInsets.symmetric(vertical: 15.0,horizontal: 0.0),
               child: TextField(
                 controller: passwordController,
+                obscureText: _obscureText,
                 style: textStyle,
                 onChanged: (value){
                   updatePassword();
                 },
                 decoration: InputDecoration(
+                  suffixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.red,onPressed: (){_toggle(); },),
                     labelText: 'Password',
                     labelStyle: textStyle,
+                    errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0)
                     )
@@ -138,6 +186,9 @@ class CardDetailState extends State<CardDetail> {
   }
 
   void _save() async{
+    _accountValidate = false;
+    _descriptionValidate = false;
+    _passwordValidate = false;
 
     moveToLastScreen();
 
@@ -199,6 +250,8 @@ class CardDetailState extends State<CardDetail> {
               ),
             ],
           );
-        });
+        }
+    );
   }
+
 }

@@ -56,7 +56,7 @@ class DBHelper{
   Future<List<Map<String,dynamic>>> getMapNotesList() async {
     Database dbConnection = await this.database;
 
-    var result = await dbConnection.query(tableName, orderBy: '$colDate ASC');
+    var result = await dbConnection.query(tableName, orderBy: '$colDate DESC');
     return result;
   }
 
