@@ -62,26 +62,7 @@ class CardDetailState extends State<CardDetail> {
           new IconButton(
               icon: Icon(Icons.check),
               onPressed: (){
-                setState(() {
-
-                  if(accountController.text.isEmpty){
-                    _accountValidate = true;
-                    _descriptionValidate = false;
-                    _passwordValidate = false;
-
-                  }else if(descriptionController.text.isEmpty){
-                    _descriptionValidate = true;
-                    _accountValidate = false;
-                    _passwordValidate = false;
-                  }else if(passwordController.text.isEmpty){
-                    _descriptionValidate = false;
-                    _accountValidate = false;
-                    _passwordValidate = true;
-                  }else{
-                    _save();
-                  }
-
-                })
+                  _checkValues();
               ;})
         ],
       ),
@@ -167,6 +148,30 @@ class CardDetailState extends State<CardDetail> {
         ),
       ),
     );
+  }
+
+  void _checkValues(){
+
+    setState(() {
+
+      if(accountController.text.isEmpty){
+        _accountValidate = true;
+        _descriptionValidate = false;
+        _passwordValidate = false;
+
+      }else if(descriptionController.text.isEmpty){
+        _descriptionValidate = true;
+        _accountValidate = false;
+        _passwordValidate = false;
+      }else if(passwordController.text.isEmpty){
+        _descriptionValidate = false;
+        _accountValidate = false;
+        _passwordValidate = true;
+      }else{
+        _save();
+      }
+
+    });
   }
 
   void moveToLastScreen(){

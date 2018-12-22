@@ -23,7 +23,9 @@ class MyAppState extends State<MyApp> {
     return new MaterialApp(
       title: 'Notes',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
+      theme: ThemeData(
+        primaryColor: Colors.white,
+      ),
       home: MyHomePage(),
     );
   }
@@ -50,8 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
   ScrollController scrollController;
 
   static var appColors = [
-    Color.fromRGBO(2,85,139, 1.0), // New
-    Color.fromRGBO(14,128,68,1.0), // Edit
+    Color.fromRGBO(255,255,255, 1.0), // New
+    Color.fromRGBO(41,194,103,1.0), // Edit
+    Color.fromRGBO(2,227,160,1.0), // Title
+    Color.fromRGBO(106,131,184,1.0), // Icons Card
+    Color.fromRGBO(249,249,249,1.0), // New Background Color App
+    Color.fromRGBO(240, 247, 255, 1.0) // Old Background Color
+
   ];
 
   @override
@@ -78,21 +85,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return SafeArea(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color.fromRGBO(240, 247, 255, 1.0),
+        backgroundColor: appColors[4],
         body: new RefreshIndicator(onRefresh:_handleRefresh, child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              title: Text(
-                " ${count > 0 ? count == 1 ? '$count note' :'$count notes' : 'No notes'}",
+              title: new GestureDetector(
+                child: Text(
+                  " ${count > 0 ? count == 1 ? '$count note' :'$count notes' : 'No notes'}",
+                ),
+                onDoubleTap: (){
+                  _showAbout();
+                },
               ),
               floating: false,
               pinned: true,
               expandedHeight: 2 * (height / 7),
               flexibleSpace: FlexibleSpaceBar(
                 background: Image.network(
-                  'https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-701012.jpg',
+                  'https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-655987.png',
                   fit: BoxFit.cover,
                 ),
+                collapseMode: CollapseMode.parallax,
               ),
               actions: <Widget>[
                 IconButton(
@@ -112,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   disabledColor: Colors.grey,
                 ),
               ],
-              elevation: 0.0,
             ),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -147,14 +159,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: new IconButton(
                                         icon: Icon(Icons.account_balance_wallet),
                                         onPressed: null,
-                                        disabledColor: Colors.blueAccent,
+                                        disabledColor: appColors[2],
                                         iconSize: width/8,
                                       ),
                                     ),
-                                    new Divider( color: Colors.indigo, indent: 3,),
+                                    new Divider( color: appColors[2], indent: 3,),
                                     new Column(
                                       children: <Widget>[
                                         new Padding(padding: new EdgeInsets.symmetric(vertical: 7)),
+
                                         new Hero(
                                           tag: 'title-${this.noteList[index].id}',
                                           child: new Column(
@@ -198,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             ],
                                           ),
                                         ),
+
                                       ],
                                     ),
                                   ],
@@ -207,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             new Row(
                               children: <Widget>[
                                 new Container(width: width/5,),
-                                new Text(this.noteList[index].date, style: TextStyle(fontStyle: FontStyle.italic,color: Colors.grey),maxLines: 1,textAlign: TextAlign.end,),
+                                new Text(this.noteList[index].date, style: TextStyle(fontStyle: FontStyle.italic,color: appColors[3]),maxLines: 1,textAlign: TextAlign.end,),
                               ],
                               mainAxisAlignment: MainAxisAlignment.start,
                               verticalDirection: VerticalDirection.down,
@@ -224,33 +238,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),),
-          drawer: new Drawer(
-            child: ListView(
-              // Important: Remove any padding from the ListView.
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  child: Text('Drawer Header'),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                ),
-                new ListTile(
-                  title: Text('Dark Theme'),
-
-                ),
-                new ListTile(
-                  title: Text('About'),
-                  onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-      ),
       ),
     );
   }
@@ -279,6 +266,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ],
+          );
+        });
+  }
+
+  void _showAbout(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9.0)
+            ),
+            title: new Text('About',textAlign: TextAlign.center,),
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Text(' App created with ❤ and flutter.', textAlign: TextAlign.justify,),
+                new Divider(),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.account_circle,),
+                  title: new Text('Rafael Alberto Martínez Méndez'),
+                ),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.mail_outline,color: Colors.blueAccent,),
+                  title: new Text('send me a mail'),
+                  onTap: (){
+                    debugPrint('send to me');
+                  },
+                ),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.group_work,color: Colors.blueAccent,),
+                  title: new Text("Github"),
+                  onTap: (){
+                    debugPrint('send to me');
+                  },
+                ),
+              ],
+            )
           );
         });
   }
