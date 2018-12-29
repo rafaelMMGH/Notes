@@ -25,19 +25,22 @@ class MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
+        hintColor: Colors.transparent
       ),
       home: MyHomePage(),
     );
   }
+
 }
 
 class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
+
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
 
   _MyHomePageState();
 
@@ -47,24 +50,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String account, description, getCount;
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  final formKey = new GlobalKey<FormState>();
+ // final formKey = new GlobalKey<FormState>();
 
   ScrollController scrollController;
+  AnimationController _iconAnimationController;
+  Animation<double> _iconAnimation;
 
   static var appColors = [
-    Color.fromRGBO(255,255,255, 1.0), // New
-    Color.fromRGBO(41,194,103,1.0), // Edit
-    Color.fromRGBO(2,227,160,1.0), // Title
-    Color.fromRGBO(106,131,184,1.0), // Icons Card
+    Colors.grey[100], // New Card
+    Colors.grey[200], // Edit Card
+    Color.fromRGBO(62,152,52,1.0), // Icon
+    Color.fromRGBO(106,131,184,1.0), // Date
     Color.fromRGBO(249,249,249,1.0), // New Background Color App
-    Color.fromRGBO(240, 247, 255, 1.0) // Old Background Color
-
+    Color.fromRGBO(240, 247, 255, 1.0), // Old Background Color
+    Color.fromRGBO(28,139,253,1.0)
   ];
 
   @override
   void initState() {
     super.initState();
+
     scrollController = new ScrollController();
+
+    _iconAnimationController = new AnimationController(vsync: this,duration: new Duration(milliseconds: 380));
+    _iconAnimation = new  CurvedAnimation(parent: _iconAnimationController,curve: Curves.fastOutSlowIn);
+
+    _iconAnimation.addListener(()=> this.setState((){}));
+    _iconAnimationController.forward();
   }
 
   @override
@@ -82,7 +94,129 @@ class _MyHomePageState extends State<MyHomePage> {
       updateListView();
     }
 
-    return SafeArea(
+    return _mainBody(height,width,aspectRatio);
+  }
+
+  void _delete(BuildContext context, Note note) async {
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Warning !"),
+            content: new Text("Are you sure to delete this card? "),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new OutlineButton(
+                onPressed: () async {
+                  int r=await dbHelper.removeNote(note.id);
+                  updateListView();
+                  if(r == 1) Navigator.of(context).pop();
+                },
+                child: new Text("Delete",style: TextStyle(color: Colors.red),),borderSide: new BorderSide(color: Colors.red),),
+            ],
+          );
+        });
+  }
+
+  void mainBottomSheet(BuildContext context, Note note) {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context){
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new ListTile(
+                  leading: Icon(Icons.delete_outline),
+                  title: new Text('Warning'),
+                  subtitle: new Text('Are you sure to delete this card ?'),
+                  onTap: (){
+                    _delete(context, note);
+                  },
+                )
+              ],
+            );
+          }
+      );
+  }
+
+  void _showAbout(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9.0)
+            ),
+            title: new Text('About',textAlign: TextAlign.center,),
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Text(' App created with ❤ and flutter.', textAlign: TextAlign.justify,),
+                new Divider(),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.account_circle,),
+                  title: new Text('Rafael Alberto Martínez Méndez'),
+                ),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.mail_outline,color: Colors.blueAccent,),
+                  title: new Text('send me a mail'),
+                  onTap: (){
+                    debugPrint('send to me');
+                  },
+                ),
+                new ListTile(
+                  contentPadding: new EdgeInsets.all(0.0),
+                  leading: new Icon(Icons.group_work,color: Colors.blueAccent,),
+                  title: new Text("Github"),
+                  onTap: (){
+                    debugPrint('send to me');
+                  },
+                ),
+              ],
+            )
+          );
+        });
+  }
+
+  void openCard(Note note, String title, Color color) async {
+    bool result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return CardDetail(note, title, color);
+    }));
+
+    if (result) updateListView();
+  }
+
+  void updateListView() {
+    final Future<Database> dbFuture = dbHelper.initDB();
+    dbFuture.then((database) {
+      Future<List<Note>> noteListFuture = dbHelper.getNoteList();
+      noteListFuture.then((noteList) {
+        setState(() {
+          this.noteList = noteList;
+          this.count = noteList.length;
+        });
+      });
+    });
+  }
+
+  Future<Null> _handleRefresh() async{
+    setState(() {
+      updateListView();
+    });
+  }
+
+  Widget _mainBody(double height,double width, double aspectRatio){
+    return
+    SafeArea(
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: appColors[4],
@@ -99,11 +233,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               floating: false,
               pinned: true,
-              expandedHeight: 2 * (height / 7),
+              expandedHeight: _iconAnimation.value * 2 * (height / 7),
               flexibleSpace: FlexibleSpaceBar(
                 background: Image.network(
-                  'https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-655987.png',
+                  'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1932&q=80',
                   fit: BoxFit.cover,
+
                 ),
                 collapseMode: CollapseMode.parallax,
               ),
@@ -131,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 3.0,
                   mainAxisSpacing: 3.0,
-                  childAspectRatio: (aspectRatio/2.4)
+                  childAspectRatio:(aspectRatio/2.4)
               ),
               delegate:
               SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -147,8 +282,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       child: new Card(
                         color:  Colors.white,
+                        elevation: 5.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(9.0)
+                            borderRadius: BorderRadius.circular(3.5)
                         ),
                         child: new Column(
                           children: <Widget>[
@@ -160,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         icon: Icon(Icons.account_balance_wallet),
                                         onPressed: null,
                                         disabledColor: appColors[2],
-                                        iconSize: width/8,
+                                        iconSize: _iconAnimation.value * width/8,
                                       ),
                                     ),
                                     new Divider( color: appColors[2], indent: 3,),
@@ -242,101 +378,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _delete(BuildContext context, Note note) async {
-    int result = await dbHelper.removeNote(note.id);
-
-    if (result != 0) {
-      _showAlert('Deleted', 'Card Deleted Successfully');
-      updateListView();
-    }
-  }
-
-  void _showAlert(String title, String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text(title),
-            content: new Text(message),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  void _showAbout(){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(9.0)
-            ),
-            title: new Text('About',textAlign: TextAlign.center,),
-            content: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Text(' App created with ❤ and flutter.', textAlign: TextAlign.justify,),
-                new Divider(),
-                new ListTile(
-                  contentPadding: new EdgeInsets.all(0.0),
-                  leading: new Icon(Icons.account_circle,),
-                  title: new Text('Rafael Alberto Martínez Méndez'),
-                ),
-                new ListTile(
-                  contentPadding: new EdgeInsets.all(0.0),
-                  leading: new Icon(Icons.mail_outline,color: Colors.blueAccent,),
-                  title: new Text('send me a mail'),
-                  onTap: (){
-                    debugPrint('send to me');
-                  },
-                ),
-                new ListTile(
-                  contentPadding: new EdgeInsets.all(0.0),
-                  leading: new Icon(Icons.group_work,color: Colors.blueAccent,),
-                  title: new Text("Github"),
-                  onTap: (){
-                    debugPrint('send to me');
-                  },
-                ),
-              ],
-            )
-          );
-        });
-  }
-
-  void openCard(Note note, String title, Color color) async {
-    bool result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return CardDetail(note, title, color);
-    }));
-
-    if (result) updateListView();
-  }
-
-  void updateListView() {
-    final Future<Database> dbFuture = dbHelper.initDB();
-    dbFuture.then((database) {
-      Future<List<Note>> noteListFuture = dbHelper.getNoteList();
-      noteListFuture.then((noteList) {
-        setState(() {
-          this.noteList = noteList;
-          this.count = noteList.length;
-        });
-      });
-    });
-  }
-
-  Future<Null> _handleRefresh() async{
-    setState(() {
-      updateListView();
-    });
-  }
 }
 

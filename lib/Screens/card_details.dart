@@ -30,18 +30,10 @@ class CardDetailState extends State<CardDetail> {
   TextEditingController descriptionController = TextEditingController();
 
   bool _accountValidate = false;
-  bool _descriptionValidate = false;
   bool _passwordValidate = false;
 
   bool _obscureText = true;
   IconData _iconPassword = Icons.lock_outline ;
-
-  void _toggle(){
-    setState(() {
-      _obscureText = !_obscureText;
-      _iconPassword = _iconPassword == Icons.lock_outline ? Icons.lock_open : Icons.lock_outline;
-    });
-  }
 
   CardDetailState(this.note,this.appBarTitle,this.color);
 
@@ -63,13 +55,16 @@ class CardDetailState extends State<CardDetail> {
               icon: Icon(Icons.check),
               onPressed: (){
                   _checkValues();
-              ;})
+              })
         ],
       ),
-      body: Padding(padding: EdgeInsets.only(top: 15.0,left: 20.0, right: 20.0),
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: <Widget>[
+      body:
+          new Container(
+            color: Colors.white,
+            child: Padding(padding: EdgeInsets.only(top: 20.0,left: 20.0, right: 20.0),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: <Widget>[
 /*
             new Hero(
               tag: 'title-${note.id}',
@@ -83,70 +78,107 @@ class CardDetailState extends State<CardDetail> {
             ),
 
 */
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0,horizontal: 0.0),
-              child: TextField(
-                controller: accountController,
-                style: textStyle,
-                onChanged: (value){
-                  updateAccount();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Account',
-                    labelStyle: textStyle,
-                    errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
-                    )
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0),
+                      child: TextField(
+                        controller: accountController,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w300,
+                        ),
+                        maxLength: 13,
+
+                        onChanged: (value){
+                          updateAccount();
+                        },
+                        decoration: InputDecoration(
+                            fillColor: Colors.grey[150],
+                            prefixIcon: Icon(Icons.account_balance_wallet,color: Colors.black,),
+                            filled: true,
+                            labelText: 'Account',
+                            labelStyle: textStyle,
+                            errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red,style: BorderStyle.none),borderRadius: BorderRadius.circular(6.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                            ),
+                        ),
+                      ),
+                    ),
+
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                      child: TextField(
+                        controller: descriptionController,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w300
+                        ),
+                        maxLines: 3,
+                        maxLength: 25,
+                        onChanged: (value){
+                          updateDescription();
+                        },
+                        decoration: InputDecoration(
+                            fillColor: Colors.grey[150],
+                            filled: true,
+                            prefixIcon: Icon(Icons.description,color: Colors.black,),
+
+                            labelText: 'Description',
+                            labelStyle: textStyle,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                            )
+
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                      child: TextField(
+                        controller: passwordController,
+                        obscureText: _obscureText,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w300
+                        ),
+                        onChanged: (value){
+                          updatePassword();
+                        },
+                        decoration: InputDecoration(
+                            fillColor: Colors.grey[150],
+                            filled: true,
+                            prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
+                            labelText: 'Password',
+                            labelStyle: textStyle,
+                            errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                            )
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
             ),
+          ),
 
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0,horizontal: 0.0),
-              child: TextField(
-                controller: descriptionController,
-                style: textStyle,
-                onChanged: (value){
-                  updateDescription();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Description',
-                    labelStyle: textStyle,
-                    errorText: _descriptionValidate ? 'Value Can\'t Be Empty' : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
-                    )
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0,horizontal: 0.0),
-              child: TextField(
-                controller: passwordController,
-                obscureText: _obscureText,
-                style: textStyle,
-                onChanged: (value){
-                  updatePassword();
-                },
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.red,onPressed: (){_toggle(); },),
-                    labelText: 'Password',
-                    labelStyle: textStyle,
-                    errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
-                    )
-                ),
-              ),
-            ),
-
-
-
-          ],
-        ),
-      ),
     );
   }
 
@@ -156,21 +188,22 @@ class CardDetailState extends State<CardDetail> {
 
       if(accountController.text.isEmpty){
         _accountValidate = true;
-        _descriptionValidate = false;
         _passwordValidate = false;
 
-      }else if(descriptionController.text.isEmpty){
-        _descriptionValidate = true;
-        _accountValidate = false;
-        _passwordValidate = false;
       }else if(passwordController.text.isEmpty){
-        _descriptionValidate = false;
         _accountValidate = false;
         _passwordValidate = true;
       }else{
         _save();
       }
 
+    });
+  }
+
+  void _toggle(){
+    setState(() {
+      _obscureText = !_obscureText;
+      _iconPassword = _iconPassword == Icons.lock_outline ? Icons.lock_open : Icons.lock_outline;
     });
   }
 
@@ -192,10 +225,9 @@ class CardDetailState extends State<CardDetail> {
 
   void _save() async{
     _accountValidate = false;
-    _descriptionValidate = false;
     _passwordValidate = false;
 
-    moveToLastScreen();
+    //moveToLastScreen();
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
@@ -250,7 +282,7 @@ class CardDetailState extends State<CardDetail> {
               new FlatButton(
                 child: new Text("Close"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  moveToLastScreen();
                 },
               ),
             ],
