@@ -4,7 +4,6 @@ import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:notes/Model/Note.dart';
 
-
 class DBHelper{
 
   static DBHelper _databaseHelper;  // Singleton DBHelper
@@ -16,8 +15,6 @@ class DBHelper{
   String colDescription = 'description';
   String colPassword = 'password';
   String colDate = 'date';
-
-  String search = '';
 
   DBHelper._createInstance();      // Named constructor to create instance of DBHelper
 
@@ -35,6 +32,7 @@ class DBHelper{
   }
 
   Future<Database> initDB() async{
+
     // Get the directory path for both android an iOS to store database
     io.Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = documentDirectory.path + 'Note.db';
@@ -57,14 +55,6 @@ class DBHelper{
     Database dbConnection = await this.database;
 
     var result = await dbConnection.query(tableName, orderBy: '$colDate DESC');
-    return result;
-  }
-
-  Future<List<Map<String,dynamic>>> getMapNote(Note notes) async {
-    Database dbConnection = await this.database;
-
-    var result = await dbConnection.query(tableName, where: '$search = ?', whereArgs: [notes.account]);
-
     return result;
   }
 

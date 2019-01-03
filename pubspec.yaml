@@ -24,6 +24,9 @@ dependencies:
   path_provider: any
   fluttertoast: any
   local_auth: '^0.3.0'
+  shared_preferences: '^0.4.3'
+  flutter_walkthrough: ^0.0.1
+
 
 dev_dependencies:
   flutter_test:
