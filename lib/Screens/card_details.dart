@@ -65,114 +65,111 @@ class CardDetailState extends State<CardDetail> {
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: <Widget>[
+                    new Column(
+                      children: <Widget>[
+                        new Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: TextField(
+                            controller: accountController,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            maxLength: 13,
+                            onChanged: (value){
+                              updateAccount();
+                            },
+                            decoration: InputDecoration(
+                              fillColor: Colors.grey[150],
+                              prefixIcon: Icon(Icons.account_balance_wallet,color: Colors.black,),
+                              filled: true,
+                              labelText: 'Account',
+                              labelStyle: textStyle,
+                              errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red,style: BorderStyle.none),borderRadius: BorderRadius.circular(6.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                          child: TextField(
+                            controller: descriptionController,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w300
+                            ),
+                            maxLines: 3,
+                            maxLength: 25,
+                            onChanged: (value){
+                              updateDescription();
+                            },
+                            decoration: InputDecoration(
+                                fillColor: Colors.grey[150],
+                                filled: true,
+                                prefixIcon: Icon(Icons.description,color: Colors.black,),
+
+                                labelText: 'Description',
+                                labelStyle: textStyle,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                                )
+
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                          child: TextField(
+                            controller: passwordController,
+                            obscureText: _obscureText,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w300
+                            ),
+                            onChanged: (value){
+                              updatePassword();
+                            },
+                            decoration: InputDecoration(
+                                fillColor: Colors.grey[150],
+                                filled: true,
+                                prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
+                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _generatePassword(context); },),
+                                labelText: 'Password',
+                                labelStyle: textStyle,
+                                errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
+                                )
+                            ),
+                          ),
+                        ),
 
 
-new Column(
-  children: <Widget>[
-    new Padding(
-      padding: EdgeInsets.only(top: 15.0),
-      child: TextField(
-        controller: accountController,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 17,
-          fontStyle: FontStyle.normal,
-          fontWeight: FontWeight.w300,
-        ),
-        maxLength: 13,
-
-        onChanged: (value){
-          updateAccount();
-        },
-        decoration: InputDecoration(
-          fillColor: Colors.grey[150],
-          prefixIcon: Icon(Icons.account_balance_wallet,color: Colors.black,),
-          filled: true,
-          labelText: 'Account',
-          labelStyle: textStyle,
-          errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red,style: BorderStyle.none),borderRadius: BorderRadius.circular(6.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
-          ),
-        ),
-      ),
-    ),
-
-
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-      child: TextField(
-        controller: descriptionController,
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w300
-        ),
-        maxLines: 3,
-        maxLength: 25,
-        onChanged: (value){
-          updateDescription();
-        },
-        decoration: InputDecoration(
-            fillColor: Colors.grey[150],
-            filled: true,
-            prefixIcon: Icon(Icons.description,color: Colors.black,),
-
-            labelText: 'Description',
-            labelStyle: textStyle,
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
-            )
-
-        ),
-      ),
-    ),
-
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-      child: TextField(
-        controller: passwordController,
-        obscureText: _obscureText,
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w300
-        ),
-        onChanged: (value){
-          updatePassword();
-        },
-        decoration: InputDecoration(
-            fillColor: Colors.grey[150],
-            filled: true,
-            prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
-            labelText: 'Password',
-            labelStyle: textStyle,
-            errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(15.0)
-            )
-        ),
-      ),
-    ),
-  ],
-)
-
+                      ],
+                    )
                   ],
                 ),
             ),
           ),
-
     );
   }
 
@@ -284,5 +281,87 @@ new Column(
         }
     );
   }
+
+  
+
+  void _generatePassword(BuildContext context) {
+
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    bool checkBoxNumbers = true;
+    double length = 4.0;
+
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context){
+          return Container(
+            color: Color.fromRGBO(117,117, 117, 1.0),
+            child: new Container(
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(15.0),
+                  topRight:  const Radius.circular(15.0)),),
+              child: new Column(mainAxisSize: MainAxisSize.min,children: <Widget>[
+
+                new Image.network("https://cdn.dribbble.com/users/1748539/screenshots/4857111/dribbble_shot_hd.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
+
+                Padding(
+                    padding: new EdgeInsets.all(0.0),
+                    child: new Column(
+                      children: <Widget>[
+                        new Text("Options",style: TextStyle(color: Color.fromRGBO(23, 23, 23, 1.0)),textAlign: TextAlign.left,),
+                        new SwitchListTile(
+                            value: checkBoxNumbers,
+                            title: new Text("Numbers"),
+                            secondary: const Icon(Icons.filter_9_plus),
+                            onChanged: (bool value) {
+                              setState(() {
+                                checkBoxNumbers = value;
+                              });
+                            }
+                        ),
+                        new SwitchListTile(
+                            value: checkBoxNumbers,
+                            title: new Text("Special Characters"),
+                            secondary: const Icon(Icons.font_download),
+                            onChanged: (bool value) {
+                              setState(() {
+                                checkBoxNumbers = value;
+                              });
+                            }
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            new Text('Length: $length'),
+                            new Slider(
+                              activeColor: Colors.black,
+                                inactiveColor: Colors.red,
+                                value: length,
+                                divisions: 16,
+                                min: 4.0,
+                                max: 20.0,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    length = value;
+                                    print(value);
+                                  });
+                                })
+                          ],
+                        )
+                      ],
+                    )
+
+
+                ),
+
+              ],),
+            )
+
+          );
+        }
+    );
+  }
+
 
 }
