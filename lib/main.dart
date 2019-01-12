@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
       title: 'Notes',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Roboto',
+        fontFamily: 'Lato',
           primaryColor: Colors.white,
           hintColor: Colors.transparent,
-          canvasColor: Colors.white
+          canvasColor: Colors.white,
       ),
       home: Splash(),
     );
@@ -127,7 +127,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     bool authenticated = false;
 
     try {
-
       await auth.getAvailableBiometrics();
 
         authenticated = await auth.authenticateWithBiometrics(
@@ -143,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
     setState(() {
       _authorized = authenticated ? 'Authorized' : 'Not Authorized';
+
     });
   }
 
@@ -265,8 +265,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 pinned: true,
                 expandedHeight: _iconAnimation.value * 2 * (height / 7),
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Image.network(
-                    'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1932&q=80',
+                  background: Image.asset(
+                    'assets/SliverAppBar.jpeg',
                     fit: BoxFit.cover,
 
                   ),
@@ -296,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                     crossAxisCount: 2,
                     crossAxisSpacing: 3.0,
                     mainAxisSpacing: 3.0,
-                    childAspectRatio:(aspectRatio/2.4)
+                    childAspectRatio:(aspectRatio/2.5)
                 ),
                 delegate:
                 SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -410,10 +410,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   Widget _biometrics(){
 
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-    final double aspectRatio = MediaQuery.of(context).devicePixelRatio;
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
         home: SafeArea(
@@ -437,9 +433,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                                 child: const Text('Authenticate'),
                                 onPressed: _authenticate,
                               ),
-                              FlatButton(onPressed: (){
-                                _mainBody(height,width,aspectRatio);
-                              }, child: Text("Enter"))
                             ],
                           ),
                         ),
@@ -466,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       updateListView();
     }
 
-    return _authorized == 'Authorized' ? _mainBody(height,width,aspectRatio) : _mainBody(height,width,aspectRatio);
+    return _authorized == 'Authorized' ? _mainBody(height,width,aspectRatio) : _biometrics();
   }
 
 }
@@ -586,7 +579,7 @@ class DataSearch extends SearchDelegate<String>{
     // TODO: implement buildSuggestions
     return ListView.builder(
         itemBuilder: (context, index) => ListTile(
-          leading: Icon(Icons.payment),
+          leading: Icon(Icons.note,color: Colors.indigoAccent,),
           title: Text(suggestionsList[index].account),
           onTap: (){
             openCard(this.noteList[index], "Edit card", appColors[1],context);

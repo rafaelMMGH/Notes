@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/Model/Note.dart';
 import 'package:notes/Database/DBHelper.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
+
 
 class CardDetail extends StatefulWidget{
 
@@ -21,6 +24,9 @@ class CardDetailState extends State<CardDetail> {
 
   String appBarTitle;
   Color color;
+  int length = 4;
+  int letters = 1;
+
   Note note;
 
   DBHelper helper = DBHelper();
@@ -36,6 +42,258 @@ class CardDetailState extends State<CardDetail> {
   IconData _iconPassword = Icons.lock_outline ;
 
   CardDetailState(this.note,this.appBarTitle,this.color);
+
+
+  @override
+  void initState() {
+    super.initState();
+    _showModalGeneratePassword(context);
+  }
+
+  void _checkValues(){
+
+    setState(() {
+
+      if(accountController.text.isEmpty){
+        _accountValidate = true;
+        _passwordValidate = false;
+
+      }else if(passwordController.text.isEmpty){
+        _accountValidate = false;
+        _passwordValidate = true;
+      }else{
+        _save();
+      }
+
+    });
+  }
+
+  void _toggle(){
+    setState(() {
+      _obscureText = !_obscureText;
+      _iconPassword = _iconPassword == Icons.lock_outline ? Icons.lock_open : Icons.lock_outline;
+    });
+  }
+
+  void moveToLastScreen(){
+    Navigator.pop(context,true);
+  }
+
+  void updateAccount(){
+    note.account = accountController.text;
+  }
+
+  void updatePassword(){
+    note.password = passwordController.text;
+  }
+
+  void updateDescription(){
+    note.description = descriptionController.text;
+  }
+
+  void _save() async{
+    _accountValidate = false;
+    _passwordValidate = false;
+
+    moveToLastScreen();
+
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+    int result;
+    if(note.id != null) { //update
+      result = await helper.updateNote(note);
+
+      if(result != 0) //Success
+        _showAlert('Saved', 'Card saved successfully');
+      else //Fail
+        _showAlert('Error', 'Problem saving Card');
+    }
+    else { //Insert
+      result = await helper.addNote(note);
+
+      if(result != 0) //Success
+        _showAlert('Saved', 'Card saved successfully');
+      else //Fail
+        _showAlert('Error', 'Problem saving Card');
+    }
+
+
+  }
+
+  void _delete() async{
+
+    moveToLastScreen();
+
+    //Case I: If user is trying to delete the NEW Card i.e. he has come to
+    //the detail page by pressing the FAB of CardList page.
+    if(note.id == null){
+      _showAlert('Error', 'No Card was deleted');
+      return;
+    }
+
+    //Case II: User is trying to delete a existing card that already  has a valid ID.
+    int result = await helper.removeNote(note.id);
+    if(result != 0)
+      _showAlert('Deleted', 'Note Deleted successfully.');
+    else
+      _showAlert('Error','Error ocurred while deleting note');
+
+  }
+
+  void _showAlert(String title, String message){
+    showDialog(
+        context: context,
+        builder: (BuildContext context ){
+          return AlertDialog(
+            title: new Text(title),
+            content: new Text(message),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  void _fireAndThud(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9.0)
+              ),
+              title: new Text('About',textAlign: TextAlign.center,),
+              content: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new Text(' The day after you stole my heart,\nEverything I touched told me it would be better shared with you', textAlign: TextAlign.justify,),
+                  new Divider(),
+                ],
+              )
+          );
+        });
+  }
+
+  _generatePassword(bool numbers,bool specials, int length, int letters) async {
+
+      var _letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      var _numbers = "0123456789";
+      var _special = "!#%&'()*+,-./:;<=>?@[]^_`{|}~";
+      var _chars = "";
+      var _text ="";
+
+      final _random = new Random();
+
+      _chars += _letters.toLowerCase();
+
+      if (numbers)
+        _chars += _numbers;
+      if (specials)
+        _chars += _special;
+
+      int startIndex(int min, int max) => min + _random.nextInt(max - min);
+
+     // _chars += letters == 1 ? _letters : letters == 2 ? _letters.toLowerCase() : _letters + _letters.toLowerCase();
+
+
+
+      for (var i = 0; i < length; i++)
+        _text += _chars.substring(startIndex(1,_chars.length))[1];
+
+      debugPrint(_text);
+
+      descriptionController.text = _text.toString();
+
+
+      Navigator.of(context).pop();
+
+  }
+
+  _showModalGeneratePassword(BuildContext context) async {
+
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    bool checkBoxNumbers = true;
+    bool checkBoxSpecial = true;
+
+    await showModalBottomSheet<String>(
+        context: context,
+        builder: (BuildContext context){
+          return Container(
+              color: Color.fromRGBO(117,117, 117, 1.0),
+              child: new Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(15.0),
+                      topRight:  const Radius.circular(15.0)),),
+                child: new Column(mainAxisSize: MainAxisSize.min,children: <Widget>[
+                  new GestureDetector(
+                    onLongPress: (){
+                      _fireAndThud();
+                    },
+                    child:
+                    new Image.asset("assets/password.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
+                  ),
+
+                  // new Image.network("https://cdn.dribbble.com/users/1748539/screenshots/4857111/dribbble_shot_hd.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
+
+                  Padding(
+                      padding: new EdgeInsets.all(0.0),
+                      child: new Column(
+                        children: <Widget>[
+                          new Text("Options",style: TextStyle(color: Color.fromRGBO(23, 23, 23, 1.0)),textAlign: TextAlign.left,),
+                          new SwitchListTile(
+                              value: checkBoxNumbers,
+                              title: new Text("Numbers"),
+                              secondary: const Icon(Icons.filter_9_plus),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  checkBoxNumbers = value;
+                                });
+                              }
+                          ),
+                          new SwitchListTile(
+                              value: checkBoxSpecial,
+                              title: new Text("Special Characters"),
+                              secondary: const Icon(Icons.font_download),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  checkBoxSpecial = value;
+                                });
+                              }
+                          ),
+                          new SingleChildScrollView(
+                            child: new Material(
+                              child: new MyDialogContent(length: length),
+                            ),
+                          ),
+
+                          new CupertinoButton(
+                              onPressed: (){
+                                setState(() {
+                                  _generatePassword(checkBoxNumbers,checkBoxSpecial,length,letters);
+                                });
+                              },
+                              child: new Text('Generate'))
+                        ],
+                      )
+
+
+                  ),
+
+                ],),
+              )
+
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +407,7 @@ class CardDetailState extends State<CardDetail> {
                                 fillColor: Colors.grey[150],
                                 filled: true,
                                 prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
-                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _generatePassword(context); },),
+                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),
                                 labelText: 'Password',
                                 labelStyle: textStyle,
                                 errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
@@ -173,195 +431,74 @@ class CardDetailState extends State<CardDetail> {
     );
   }
 
-  void _checkValues(){
-
-    setState(() {
-
-      if(accountController.text.isEmpty){
-        _accountValidate = true;
-        _passwordValidate = false;
-
-      }else if(passwordController.text.isEmpty){
-        _accountValidate = false;
-        _passwordValidate = true;
-      }else{
-        _save();
-      }
-
-    });
-  }
-
-  void _toggle(){
-    setState(() {
-      _obscureText = !_obscureText;
-      _iconPassword = _iconPassword == Icons.lock_outline ? Icons.lock_open : Icons.lock_outline;
-    });
-  }
-
-  void moveToLastScreen(){
-    Navigator.pop(context,true);
-  }
-
-  void updateAccount(){
-    note.account = accountController.text;
-  }
-
-  void updatePassword(){
-    note.password = passwordController.text;
-  }
-
-  void updateDescription(){
-    note.description = descriptionController.text;
-  }
-
-  void _save() async{
-    _accountValidate = false;
-    _passwordValidate = false;
-
-    moveToLastScreen();
-
-    note.date = DateFormat.yMMMd().format(DateTime.now());
-    int result;
-    if(note.id != null) { //update
-      result = await helper.updateNote(note);
-
-      if(result != 0) //Success
-        _showAlert('Saved', 'Card saved successfully');
-      else //Fail
-        _showAlert('Error', 'Problem saving Card');
-    }
-    else { //Insert
-      result = await helper.addNote(note);
-
-      if(result != 0) //Success
-        _showAlert('Saved', 'Card saved successfully');
-      else //Fail
-        _showAlert('Error', 'Problem saving Card');
-    }
-
-
-  }
-
-  void _delete() async{
-
-    moveToLastScreen();
-
-    //Case I: If user is trying to delete the NEW Card i.e. he has come to
-    //the detail page by pressing the FAB of CardList page.
-    if(note.id == null){
-      _showAlert('Error', 'No Card was deleted');
-      return;
-    }
-
-    //Case II: User is trying to delete a existing card that already  has a valid ID.
-    int result = await helper.removeNote(note.id);
-    if(result != 0)
-      _showAlert('Deleted', 'Note Deleted successfully.');
-    else
-      _showAlert('Error','Error ocurred while deleting note');
-
-  }
-
-  void _showAlert(String title, String message){
-    showDialog(
-        context: context,
-        builder: (BuildContext context ){
-          return AlertDialog(
-            title: new Text(title),
-            content: new Text(message),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  
-
-  void _generatePassword(BuildContext context) {
-
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-    bool checkBoxNumbers = true;
-    double length = 4.0;
-
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context){
-          return Container(
-            color: Color.fromRGBO(117,117, 117, 1.0),
-            child: new Container(
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(15.0),
-                  topRight:  const Radius.circular(15.0)),),
-              child: new Column(mainAxisSize: MainAxisSize.min,children: <Widget>[
-
-                new Image.network("https://cdn.dribbble.com/users/1748539/screenshots/4857111/dribbble_shot_hd.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
-
-                Padding(
-                    padding: new EdgeInsets.all(0.0),
-                    child: new Column(
-                      children: <Widget>[
-                        new Text("Options",style: TextStyle(color: Color.fromRGBO(23, 23, 23, 1.0)),textAlign: TextAlign.left,),
-                        new SwitchListTile(
-                            value: checkBoxNumbers,
-                            title: new Text("Numbers"),
-                            secondary: const Icon(Icons.filter_9_plus),
-                            onChanged: (bool value) {
-                              setState(() {
-                                checkBoxNumbers = value;
-                              });
-                            }
-                        ),
-                        new SwitchListTile(
-                            value: checkBoxNumbers,
-                            title: new Text("Special Characters"),
-                            secondary: const Icon(Icons.font_download),
-                            onChanged: (bool value) {
-                              setState(() {
-                                checkBoxNumbers = value;
-                              });
-                            }
-                        ),
-                        new Row(
-                          children: <Widget>[
-                            new Text('Length: $length'),
-                            new Slider(
-                              activeColor: Colors.black,
-                                inactiveColor: Colors.red,
-                                value: length,
-                                divisions: 16,
-                                min: 4.0,
-                                max: 20.0,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    length = value;
-                                    print(value);
-                                  });
-                                })
-                          ],
-                        )
-                      ],
-                    )
-
-
-                ),
-
-              ],),
-            )
-
-          );
-        }
-    );
-  }
-
-
 }
+
+class MyDialogContent extends StatefulWidget {
+  MyDialogContent({
+    Key key,
+    this.length,
+  }): super(key: key);
+
+  final int length;
+
+  @override
+  _MyDialogContentState createState() => new _MyDialogContentState();
+}
+
+class _MyDialogContentState extends State<MyDialogContent> {
+  int _selectedIndex = 4;
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  _getContent(){
+    if (widget.length == 4){
+      return     new Row(
+        children: <Widget>[
+          new Padding(padding: new EdgeInsets.symmetric(horizontal: 9)),
+          new Icon(Icons.settings_ethernet,color: Colors.grey[600],),
+          new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
+          new Text('Length:     $_selectedIndex',style: TextStyle(fontSize: 16),),
+          new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
+          new Slider(
+              value: _selectedIndex.toDouble(),
+              min: 4.0,
+              max: 20.0,
+              activeColor: Colors.blue,
+              inactiveColor: Colors.grey[300],
+
+              onChanged: (double value) {
+                setState(() {
+                  _selectedIndex = value.round();
+                });
+              }),
+        ],
+      );
+    }
+
+    new Row(
+      children: <Widget>[
+        new Icon(Icons.settings_ethernet),
+        new Text('Length: $_selectedIndex'),
+        new Slider(
+            value: _selectedIndex.toDouble(),
+            min: 0.0,
+            max: 100.0,
+            activeColor: Colors.blue,
+            onChanged: (double value) {
+              setState(() {
+                _selectedIndex = value.round();
+              });
+            }),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _getContent();
+  }
+}
+
