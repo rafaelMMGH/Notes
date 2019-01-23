@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:notes/Model/Note.dart';
 import 'package:notes/Database/DBHelper.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class CardDetail extends StatefulWidget{
@@ -209,6 +211,9 @@ class CardDetailState extends State<CardDetail> {
 
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+
     accountController.text = note.account;
     passwordController.text = note.password;
     descriptionController.text = note.description;
@@ -235,7 +240,11 @@ class CardDetailState extends State<CardDetail> {
                     new Column(
                       children: <Widget>[
                         new Padding(
-                          padding: EdgeInsets.only(top: 15.0),
+                            padding: EdgeInsets.only(bottom: 5.0),
+                          child: new Image.asset("assets/notes.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width,),
+                        ),
+                        new Padding(
+                          padding: EdgeInsets.only(top: 0.0),
                           child: TextField(
                             controller: accountController,
                             style: TextStyle(
@@ -342,176 +351,6 @@ class CardDetailState extends State<CardDetail> {
 
 }
 
-class MyDialogContent extends StatefulWidget {
-  MyDialogContent({
-    Key key,
-    this.length,
-  }): super(key: key);
-
-  final int length;
-
-  @override
-  _MyDialogContentState createState() => new _MyDialogContentState();
-}
-
-class _MyDialogContentState extends State<MyDialogContent> {
-  int _selectedIndex = 4;
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  _getContent(){
-    if (widget.length == 4){
-      return new Row(
-        children: <Widget>[
-          new Padding(padding: new EdgeInsets.symmetric(horizontal: 9)),
-          new Icon(Icons.settings_ethernet,color: Colors.grey[600],),
-          new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
-          new Text('Length:     $_selectedIndex',style: TextStyle(fontSize: 16),),
-          new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
-          new Slider(
-              value: _selectedIndex.toDouble(),
-              min: 4.0,
-              max: 20.0,
-              activeColor: Colors.blue,
-              inactiveColor: Colors.grey[300],
-
-              onChanged: (double value) {
-                setState(() {
-                  _selectedIndex = value.round();
-                });
-              }),
-        ],
-      );
-    }
-
-    new Row(
-      children: <Widget>[
-        new Icon(Icons.settings_ethernet),
-        new Text('Length: $_selectedIndex'),
-        new Slider(
-            value: _selectedIndex.toDouble(),
-            min: 0.0,
-            max: 100.0,
-            activeColor: Colors.blue,
-            onChanged: (double value) {
-              setState(() {
-                _selectedIndex = value.round();
-              });
-            }),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _getContent();
-  }
-}
-
-class GeneratePassword extends StatefulWidget{
-  GeneratePassword({
-    Key key,
-    this.checkBoxNumbers,
-    this.checkBoxSpecial,
-    this.length,
-    this.letters,
-  }): super(key:key);
-
-  final bool checkBoxNumbers;
-  final bool checkBoxSpecial;
-  final int length;
-  final int letters;
-
-  @override
-  _GeneratePasswordState createState() => new _GeneratePasswordState();
-
-}
-
-class _GeneratePasswordState extends State<GeneratePassword> {
-  bool _checkBoxNumbers;
-  bool _checkBoxSpecial;
-  int _letters;
-  int _selectedIndex = 4;
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  _getContent(){
-    if (widget.length == 4){
-      return new CupertinoButton(
-          onPressed: (){
-            setState(() {
-              //_generatePassword(checkBoxNumbers,checkBoxSpecial,length,letters);
-            });
-          },
-          child: new Text('Generate'));
-    }
-
-    new Row(
-      children: <Widget>[
-        new Icon(Icons.settings_ethernet),
-        new Text('Length: $_selectedIndex'),
-        new Slider(
-            value: _selectedIndex.toDouble(),
-            min: 0.0,
-            max: 100.0,
-            activeColor: Colors.blue,
-            onChanged: (double value) {
-              setState(() {
-                _selectedIndex = value.round();
-              });
-            }),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _getContent();
-  }
-
-  _generatePassword(bool numbers,bool specials, int length, int letters) async {
-
-    var _letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var _numbers = "0123456789";
-    var _special = "!#%&'()*+,-./:;<=>?@[]^_`{|}~";
-    var _chars = "";
-    var _text ="";
-
-    final _random = new Random();
-
-    _chars += _letters.toLowerCase();
-
-    if (numbers)
-      _chars += _numbers;
-    if (specials)
-      _chars += _special;
-
-    int startIndex(int min, int max) => min + _random.nextInt(max - min);
-
-    // _chars += letters == 1 ? _letters : letters == 2 ? _letters.toLowerCase() : _letters + _letters.toLowerCase();
-
-
-
-    for (var i = 0; i < length; i++)
-      _text += _chars.substring(startIndex(1,_chars.length))[1];
-
-    debugPrint(_text);
-    debugPrint(length.toString());
-
-    //  passwordController.text = _text.toString();
-
-
-    Navigator.of(context).pop();
-
-  }
-}
-
 class MyBottomSheetDialog extends StatefulWidget{
   MyBottomSheetDialog({
     Key key,
@@ -544,7 +383,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
     super.initState();
   }
 
-
   void _fireAndThud(){
     showDialog(
         context: context,
@@ -565,6 +403,75 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
         });
   }
 
+  _generatePassword(bool numbers,bool specials, int length, int letters) async {
+
+    var _letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var _numbers = "0123456789";
+    var _special = "!#%&'()*+,-./:;<=>?@[]^_`{|}~";
+    var _chars = "";
+    var _text ="";
+    final key = new GlobalKey<ScaffoldState>();
+
+
+    final _random = new Random();
+
+    _chars += _letters.toLowerCase();
+
+    if (numbers)
+      _chars += _numbers;
+    if (specials)
+      _chars += _special;
+
+    int startIndex(int min, int max) => min + _random.nextInt(max - min);
+
+    // _chars += letters == 1 ? _letters : letters == 2 ? _letters.toLowerCase() : _letters + _letters.toLowerCase();
+
+
+    for (var i = 0; i < length; i++)
+      _text += _chars.substring(startIndex(1,_chars.length))[1];
+
+
+
+    return
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              key: key,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(9.0)
+                ),
+                title: new Text('My new Password :)',textAlign: TextAlign.center,),
+                content: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    new GestureDetector(
+                      child: new Text(_text, textAlign: TextAlign.justify,),
+                        onLongPress:() => _showtoast(context, _text),
+                    ),
+
+                    new Divider(),
+                  ],
+                )
+            );
+          });
+
+
+    Navigator.of(context).pop();
+
+  }
+
+  _showtoast(BuildContext contex, String password){
+
+    Clipboard.setData(new ClipboardData(text: password));
+
+    Fluttertoast.showToast(
+        msg: "Copied to Clipboard",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1
+    );
+  }
 
   _getContent(BuildContext context){
 
@@ -611,7 +518,29 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                 ),
                 new SingleChildScrollView(
                   child: new Material(
-                    child: new MyDialogContent(length: _selectLength),
+                    child:
+                    new Row(
+                      children: <Widget>[
+                        new Padding(padding: new EdgeInsets.symmetric(horizontal: 9)),
+                        new Icon(Icons.settings_ethernet,color: Colors.grey[600],),
+                        new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
+                        new Text('Length:     $_selectLength',style: TextStyle(fontSize: 16),),
+                        new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
+                        new Slider(
+                            value: _selectLength.toDouble(),
+                            min: 4.0,
+                            max: 20.0,
+                            activeColor: Colors.blue,
+                            inactiveColor: Colors.grey[300],
+
+                            onChanged: (double value) {
+                              setState(() {
+                                _selectLength = value.round();
+                              });
+                            }),
+                      ],
+                    ),
+                    // new MyDialogContent(length: _selectLength),
                   ),
                 ),
                 /*new SingleChildScrollView(
@@ -622,8 +551,7 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                   new CupertinoButton(
                   onPressed: (){
                     setState(() {
-
-                    //_generatePassword(checkBoxNumbers,checkBoxSpecial,length,letters);
+                    _generatePassword(_checkBoxNumbers,_checkBoxSpecial,_selectLength,_selectLetters);
                     });
                   },
                   child: new Text('Generate'))
@@ -640,7 +568,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return _getContent(context);
   }
 }
