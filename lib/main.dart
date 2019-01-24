@@ -244,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   Widget _mainBody(double height,double width, double aspectRatio){
 
     return
-      SafeArea(
+      Container(
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: appColors[4],
@@ -412,7 +412,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-        home: SafeArea(
+        home: Container(
             child: Scaffold(
               body: ConstrainedBox(
                   constraints: const BoxConstraints.expand(),

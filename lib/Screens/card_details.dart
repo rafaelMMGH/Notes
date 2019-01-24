@@ -184,9 +184,6 @@ class CardDetailState extends State<CardDetail> {
 
   _showModalGeneratePassword(BuildContext context) async {
 
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-
     await showModalBottomSheet<String>(
         context: context,
         builder: (BuildContext context){
@@ -212,7 +209,6 @@ class CardDetailState extends State<CardDetail> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
     final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
 
     accountController.text = note.account;
     passwordController.text = note.password;
@@ -325,7 +321,7 @@ class CardDetailState extends State<CardDetail> {
                                 fillColor: Colors.grey[150],
                                 filled: true,
                                 prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
-                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),   //vxvbvcnbcbnjhghjgjgjgjghjhgjghjvxvbvcnbcbnjhghjgjgjgjghjhgjghjvxvbvcnbcbnjhghjgjgjgjghjhgjghjvxvbvcnbcbnjhghjgjgjgjghjhgjghj
+                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),
                                 labelText: 'Password',
                                 labelStyle: textStyle,
                                 errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
@@ -431,7 +427,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
       _text += _chars.substring(startIndex(1,_chars.length))[1];
 
 
-
     return
       showDialog(
           context: context,
@@ -455,9 +450,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                 )
             );
           });
-
-
-    Navigator.of(context).pop();
 
   }
 
@@ -488,8 +480,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
           child:
           new Image.asset("assets/password.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
         ),
-
-        // new Image.network("https://cdn.dribbble.com/users/1748539/screenshots/4857111/dribbble_shot_hd.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
 
         Padding(
             padding: new EdgeInsets.all(0.0),
@@ -524,15 +514,14 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                         new Padding(padding: new EdgeInsets.symmetric(horizontal: 9)),
                         new Icon(Icons.settings_ethernet,color: Colors.grey[600],),
                         new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
-                        new Text('Length:     $_selectLength',style: TextStyle(fontSize: 16),),
-                        new Padding(padding: new EdgeInsets.symmetric(horizontal: 15)),
+                        new Text('Length:   $_selectLength',style: TextStyle(fontSize: 16),),
+                        new Padding(padding: new EdgeInsets.symmetric(horizontal: 10)),
                         new Slider(
                             value: _selectLength.toDouble(),
                             min: 4.0,
                             max: 20.0,
                             activeColor: Colors.blue,
                             inactiveColor: Colors.grey[300],
-
                             onChanged: (double value) {
                               setState(() {
                                 _selectLength = value.round();
@@ -543,11 +532,6 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                     // new MyDialogContent(length: _selectLength),
                   ),
                 ),
-                /*new SingleChildScrollView(
-                  child: new Material(
-                    child: new GeneratePassword(checkBoxNumbers: checkBoxNumbers,checkBoxSpecial: checkBoxSpecial,length: length,letters: letters),
-                  ),
-                ),*/
                   new CupertinoButton(
                   onPressed: (){
                     setState(() {
