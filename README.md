@@ -4,7 +4,7 @@ Aplicación realizada para la captura de cuentas/passwords creada con Flutter
 
 <p align="center">
 
- ![Icon App ](https://i.ibb.co/yVGSxnf/Captura-de-pantalla-2019-01-23-a-la-s-18-23-30.png)
+ <img src="https://i.ibb.co/yVGSxnf/Captura-de-pantalla-2019-01-23-a-la-s-18-23-30.png">
 
 </p>
 
