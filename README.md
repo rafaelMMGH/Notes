@@ -1,6 +1,6 @@
 # Notes
 
-Aplicación realizada para la captura de cuentas/passwords creada con Flutter
+Application made to capture accounts / passwords created with Flutter
 
 <p align="center">
 
@@ -13,25 +13,29 @@ Aplicación realizada para la captura de cuentas/passwords creada con Flutter
 
 
 ## Project Overview
-Aplicacion nada elegante creada por la necesidad de guardar y generar contraseñas de manera local en un dispositivo movil. Just that  
+
+Not a fancy application created by the need to store and generate passwords locally on a mobile device. Just that
 
 
 ## ScreenShoot
 
-<img src="https://i.ibb.co/ygZ1F11/Captura-de-pantalla-2019-01-23-a-la-s-17-55-55.png" width="500" height="900">
+<p align="center">
+ 
+ <img src="https://i.ibb.co/ygZ1F11/Captura-de-pantalla-2019-01-23-a-la-s-17-55-55.png" width="500" height="900">
 
-<img src="https://i.ibb.co/hsNv2Hd/Captura-de-pantalla-2019-01-23-a-la-s-17-56-48.png" width="500" height="900">
+ <img src="https://i.ibb.co/hsNv2Hd/Captura-de-pantalla-2019-01-23-a-la-s-17-56-48.png" width="500" height="900">
 
-<img src="https://i.ibb.co/JqGCKsY/Captura-de-pantalla-2019-01-23-a-la-s-17-57-07.png" width="500" height="900">
+ <img src="https://i.ibb.co/JqGCKsY/Captura-de-pantalla-2019-01-23-a-la-s-17-57-07.png" width="500" height="900">
 
-<img src="https://i.ibb.co/GCSHG7h/Captura-de-pantalla-2019-01-23-a-la-s-18-00-39.png" width="500" height="900">
+ <img src="https://i.ibb.co/GCSHG7h/Captura-de-pantalla-2019-01-23-a-la-s-18-00-39.png" width="500" height="900">
 
-<img src="https://i.ibb.co/Y3b9Qs2/Captura-de-pantalla-2019-01-23-a-la-s-18-00-48.png" width="500" height="900">
+ <img src="https://i.ibb.co/Y3b9Qs2/Captura-de-pantalla-2019-01-23-a-la-s-18-00-48.png" width="500" height="900">
 
-<img src="https://i.ibb.co/4JZGLMD/Captura-de-pantalla-2019-01-23-a-la-s-18-01-36.png" width="500" height="900">
+ <img src="https://i.ibb.co/4JZGLMD/Captura-de-pantalla-2019-01-23-a-la-s-18-01-36.png" width="500" height="900">
 
-<img src="https://i.ibb.co/59Q0hjs/Captura-de-pantalla-2019-01-23-a-la-s-18-13-08.png" width="500" height="900">
+ <img src="https://i.ibb.co/59Q0hjs/Captura-de-pantalla-2019-01-23-a-la-s-18-13-08.png" width="500" height="900">
 
+</p>
 
 ## Built With
 
