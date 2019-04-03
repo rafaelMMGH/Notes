@@ -27,6 +27,8 @@ dependencies:
   shared_preferences: '^0.4.3'
   flutter_walkthrough: ^0.0.1
   flutter_launcher_icons: "^0.6.1"
+  url_launcher: ^3.0.2
+
 
 flutter_icons:
   image_path: "assets/icon.png"

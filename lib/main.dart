@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_walkthrough/flutter_walkthrough.dart';
 import 'package:flutter_walkthrough/walkthrough.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 import 'package:local_auth/error_codes.dart' as auth_error;
 
@@ -197,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                     leading: new Icon(Icons.mail_outline,color: Colors.blueAccent,),
                     title: new Text('send me a mail'),
                     onTap: (){
-                      debugPrint('send to me');
+                      _launchURL();
                     },
                   ),
                   new ListTile(
@@ -205,13 +207,26 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                     leading: new Icon(Icons.group_work,color: Colors.blueAccent,),
                     title: new Text("Github"),
                     onTap: (){
-                      debugPrint('send to me');
+                      _launchURL();
                     },
                   ),
                 ],
               )
           );
         });
+  }
+
+  _launchURL() async {
+    const url = 'https://flutter.io';
+
+
+
+    if (await canLaunch(url)) {
+      debugPrint("asdasdasdasdddd23123");
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void openCard(Note note, String title, Color color) async {

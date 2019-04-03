@@ -94,11 +94,11 @@ class CardDetailState extends State<CardDetail> {
     note.description = descriptionController.text;
   }
 
-  void _save() async{
+  _save() async{
     _accountValidate = false;
     _passwordValidate = false;
 
-    moveToLastScreen();
+  //  moveToLastScreen();
 
     note.date = DateFormat.yMMMd().format(DateTime.now());
     int result;
@@ -118,8 +118,6 @@ class CardDetailState extends State<CardDetail> {
       else //Fail
         _showAlert('Error', 'Problem saving Card');
     }
-
-
   }
 
   void _delete() async{
@@ -153,13 +151,15 @@ class CardDetailState extends State<CardDetail> {
               new FlatButton(
                 child: new Text("Close"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  moveToLastScreen();
+                  moveToLastScreen();
                 },
               ),
             ],
           );
         }
     );
+
   }
 
   void _fireAndThud(){
@@ -372,7 +372,8 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
   int _selectLength = 4;
   int _selectLetters = 1;
   bool _checkBoxNumbers = true;
-  bool _checkBoxSpecial = true;
+  bool _checkBoxSpecial = false;
+
 
   @override
   void initState() {
@@ -411,7 +412,7 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
 
     final _random = new Random();
 
-    _chars += _letters.toLowerCase();
+    //_chars += _letters.toLowerCase();
 
     if (numbers)
       _chars += _numbers;
@@ -420,7 +421,7 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
 
     int startIndex(int min, int max) => min + _random.nextInt(max - min);
 
-    // _chars += letters == 1 ? _letters : letters == 2 ? _letters.toLowerCase() : _letters + _letters.toLowerCase();
+     _chars += letters == 0 ? _letters : letters == 1 ? _letters.toLowerCase() : _letters + _letters.toLowerCase();
 
 
     for (var i = 0; i < length; i++)
@@ -481,6 +482,7 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
           new Image.asset("assets/password.jpg",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width/2,height: height/6,),
         ),
 
+
         Padding(
             padding: new EdgeInsets.all(0.0),
             child: new Column(
@@ -506,6 +508,16 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                       });
                     }
                 ),
+
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Radio(value: 0, groupValue: _selectLetters, onChanged: (int value) { setState(() {_selectLetters = value;});}), new Text("Mayusc",style: new TextStyle(fontSize: 16.0),),
+                    new Radio(value: 1, groupValue: _selectLetters, onChanged: (int value) { setState(() {_selectLetters = value;});}), new Text("Minus",style: new TextStyle(fontSize: 16.0),),
+                    new Radio(value: 2, groupValue: _selectLetters, onChanged: (int value) { setState(() {_selectLetters = value;});}), new Text("Both",style: new TextStyle(fontSize: 16.0),),
+                  ],
+                ),
+
                 new SingleChildScrollView(
                   child: new Material(
                     child:
@@ -532,14 +544,15 @@ class _MyBottomSheetDialogState extends State<MyBottomSheetDialog>{
                     // new MyDialogContent(length: _selectLength),
                   ),
                 ),
-                  new CupertinoButton(
-                  onPressed: (){
-                    setState(() {
-                    _generatePassword(_checkBoxNumbers,_checkBoxSpecial,_selectLength,_selectLetters);
-                    });
-                  },
-                  child: new Text('Generate'))
-
+                  new OutlineButton(
+                    onPressed: (){
+                      setState(() {
+                      _generatePassword(_checkBoxNumbers,_checkBoxSpecial,_selectLength,_selectLetters);
+                      });
+                    },
+                    borderSide: BorderSide(color: Colors.blue),
+                    child: new Text('Generate',style: TextStyle(color: Colors.blue),),
+                  )
               ],
             )
 
