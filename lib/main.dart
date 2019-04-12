@@ -191,21 +191,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                   new Divider(),
                   new ListTile(
                     contentPadding: new EdgeInsets.all(0.0),
-                    leading: new Icon(Icons.account_circle,),
+                    leading: new Icon(Icons.account_circle,color: Colors.blueAccent,),
                     title: new Text('Rafael Alberto Martínez Méndez'),
-                  ),
-                  new ListTile(
-                    contentPadding: new EdgeInsets.all(0.0),
-                    leading: new Icon(Icons.mail_outline,color: Colors.blueAccent,),
-                    title: new Text('send me a mail'),
-                    onTap: (){
-                      _launchURL();
-                    },
-                  ),
-                  new ListTile(
-                    contentPadding: new EdgeInsets.all(0.0),
-                    leading: new Icon(Icons.group_work,color: Colors.blueAccent,),
-                    title: new Text("Github"),
                     onTap: (){
                       _launchURL();
                     },
@@ -217,16 +204,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   _launchURL() async {
-    const url = 'https://flutter.io';
+    const url = 'https://github.com/rafaelMMGH';
 
-
-
-    if (await canLaunch(url)) {
-      debugPrint("asdasdasdasdddd23123");
+    if (await canLaunch(url))
       await launch(url);
-    } else {
+    else
       throw 'Could not launch $url';
-    }
+
   }
 
   void openCard(Note note, String title, Color color) async {
