@@ -249,15 +249,15 @@ class CardDetailState extends State<CardDetail> {
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w300,
                             ),
-                            maxLength: 13,
+                            maxLength: 25,
                             onChanged: (value){
                               updateAccount();
                             },
                             decoration: InputDecoration(
                               fillColor: Colors.grey[150],
-                              prefixIcon: Icon(Icons.account_balance_wallet,color: Colors.black,),
+                              prefixIcon: Icon(Icons.filter_drama,color: Colors.black,),
                               filled: true,
-                              labelText: 'Account',
+                              labelText: 'subscription',//'Account',
                               labelStyle: textStyle,
                               errorText: _accountValidate ? 'Value Can\'t Be Empty' : null,
                               border: OutlineInputBorder(
@@ -280,17 +280,17 @@ class CardDetailState extends State<CardDetail> {
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.w300
                             ),
-                            maxLines: 3,
-                            maxLength: 25,
+                            //maxLines: 3,
+                            maxLength: 35,
                             onChanged: (value){
                               updateDescription();
                             },
                             decoration: InputDecoration(
                                 fillColor: Colors.grey[150],
                                 filled: true,
-                                prefixIcon: Icon(Icons.description,color: Colors.black,),
+                                prefixIcon: Icon(Icons.mail_outline,color: Colors.black,),
 
-                                labelText: 'Description',
+                                labelText: 'Account',//'Description',
                                 labelStyle: textStyle,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
@@ -321,7 +321,7 @@ class CardDetailState extends State<CardDetail> {
                                 fillColor: Colors.grey[150],
                                 filled: true,
                                 prefixIcon: IconButton(icon: Icon(_iconPassword),color: Colors.blue[700],onPressed: (){_toggle(); },),
-                                suffixIcon: IconButton(icon: Icon(Icons.threesixty),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),
+                                suffixIcon: IconButton(icon: Icon(Icons.scatter_plot),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),
                                 labelText: 'Password',
                                 labelStyle: textStyle,
                                 errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,

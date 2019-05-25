@@ -23,7 +23,10 @@ dependencies:
   sqflite: any
   path_provider: any
   fluttertoast: any
-  local_auth: '^0.3.0'
+  local_auth:
+    git:
+      url: https://github.com/flutter/plugins.git
+      path: packages/local_auth
   shared_preferences: '^0.4.3'
   flutter_walkthrough: ^0.0.1
   flutter_launcher_icons: "^0.6.1"
@@ -56,6 +59,8 @@ flutter:
     - assets/SliverAppBar.jpeg
     - assets/password.jpg
     - assets/notes.jpg
+    - assets/fingerprint.png
+    - assets/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

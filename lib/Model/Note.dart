@@ -13,12 +13,12 @@ class Note{
   String get date => _date;
 
   set account(String pAccount){
-    if(pAccount.length <=13)
+    if(pAccount.length <=25)
       this._account = pAccount;
   }
 
   set description(String pDescription){
-    if(pDescription.length <=25)
+    if(pDescription.length <=35)
       this._description = pDescription;
   }
 

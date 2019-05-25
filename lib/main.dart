@@ -94,6 +94,11 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   List<Note> noteList;
   int count = 0;
 
+  Color _color1 = Colors.deepOrange[100];
+  Color _color2 = Colors.deepOrange[100];
+  Color _color3 = Colors.deepOrange[100];
+  Color _color4 = Colors.deepOrange[100];
+
   String account, description, getCount;
   final scaffoldKey = new GlobalKey<ScaffoldState>();
  // final formKey = new GlobalKey<FormState>();
@@ -111,6 +116,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     Color.fromRGBO(240, 247, 255, 1.0), // Old Background Color
     Color.fromRGBO(28,139,253,1.0)
   ];
+
+  var aux = [];
+  var password = [2,1,4,2];
 
   @override
   void initState() {
@@ -219,6 +227,50 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     }));
 
     if (result) updateListView();
+  }
+
+  Widget _passwordButtons(String number){
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    final double aspectRatio = MediaQuery.of(context).devicePixelRatio;
+
+    setState(() {
+
+        aux.add(number);
+
+
+      if(_color1 == Colors.deepOrange[100])
+        _color1 = Colors.deepOrange;
+      else if(_color2 == Colors.deepOrange[100])
+        _color2 = Colors.deepOrange;
+      else if(_color3 == Colors.deepOrange[100])
+        _color3 = Colors.deepOrange;
+      else if(_color4 == Colors.deepOrange[100])
+        _color4 = Colors.deepOrange;
+
+
+      if(aux.toString() == password.toString())
+        _authorized = 'Authorized';
+
+    });
+
+    return build(context);
+  }
+
+  void _clearPasswordButtons(){
+    setState(() {
+
+      aux.removeLast();
+
+      if(_color4 == Colors.deepOrange)
+        _color4 = Colors.deepOrange[100];
+      else if(_color3 == Colors.deepOrange)
+        _color3 = Colors.deepOrange[100];
+      else if(_color2 == Colors.deepOrange)
+        _color2 = Colors.deepOrange[100];
+      else if(_color1 == Colors.deepOrange)
+        _color1 = Colors.deepOrange[100];
+    });
   }
 
   void updateListView() {
@@ -407,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       );
   }
 
-  Widget _biometrics(){
+  Widget _biometrics(double height,double width, double aspectRatio){
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -418,29 +470,186 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        new Padding(padding: EdgeInsets.all(15.0)),
-                        new Icon(Icons.note_add,color: Colors.deepOrange,size: 100,),
+                        new Padding(padding: new EdgeInsets.only(top: 15.00)),
+                        new Image.asset("assets/icon.png",alignment: Alignment.topCenter,repeat: ImageRepeat.noRepeat,width: width,height: height/3,),
 
                         new Container(
+                          padding: new EdgeInsets.only(top: 15,right: width/8,left: width/8),
                           child: new Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              new Text("Access code or fingerprint:",textAlign: TextAlign.center,style: TextStyle(fontSize: 19,),),
-                              new Padding(padding: EdgeInsets.all(50.0)),
-                              Text('Current State: $_authorized\n'),
-                              RaisedButton(
-                                child: const Text('Authenticate'),
-                                onPressed: _authenticate,
+
+                              new Row(
+                                children: <Widget>[
+                                  
+                                  new Padding(padding: EdgeInsets.only(left: width/5),
+                                    child: Container(
+                                      width: 15,
+                                      height: 15,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: _color1,
+                                      ),
+                                    ) ,
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(left: width/16),
+                                    child: Container(
+                                      width: 15,
+                                      height: 15,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: _color2,
+                                      ),
+                                    ) ,
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(left: width/16),
+                                      child: Container(
+                                        width: 15,
+                                        height: 15,
+                                        decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: _color3,
+                                        ),
+                                      ) ,
+                                    ),
+                                  new Padding(padding: EdgeInsets.only(left: width/16),
+                                      child: Container(
+                                        width: 15,
+                                        height: 15,
+                                        decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: _color4,
+                                        ),
+                                      ) ,
+                                    ),
+
+                                ],
+                            ),
+                              new Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                              new Row(
+                                children: <Widget>[
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("1"); },child: new Center(child: Text("1",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("2"); },child: new Center(child: Text("2",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("3"); },child: new Center(child: Text("3",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                ],
                               ),
+                              new Row(
+                                children: <Widget>[
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("4"); },child: new Center(child: Text("4",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("5"); },child: new Center(child: Text("5",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("6"); },child: new Center(child: Text("6",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                ],
+                              ),
+                              new Row(
+                                children: <Widget>[
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("7"); },child: new Center(child: Text("7",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("8"); },child: new Center(child: Text("8",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("9"); },child: new Center(child: Text("9",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+                                ],
+                              ),
+
+                              new Row(
+                                children: <Widget>[
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _clearPasswordButtons(); },child: new Center(child: Icon(Icons.backspace,),)),
+
+                                  ),
+
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child: new FlatButton(onPressed: (){ _passwordButtons("0"); },child: new Center(child: Text("0",style: TextStyle(fontSize: 30),),)),
+
+                                  ),
+
+                                  new ButtonTheme(
+                                    minWidth: width/4,
+                                    height: height/8,
+                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(17.0)),
+                                    child:
+                                        FlatButton(
+                                          padding: EdgeInsets.all(0.0),
+                                          onPressed: _authenticate,
+                                          child: new Center(child: Icon(Icons.fingerprint,size: width/7,color: Colors.red,),),
+                                        ),
+                                      
+                                    
+
+                                  ),
+
+
+
+                                ],
+                              )
+
                             ],
                           ),
                         ),
-
                       ]
                   )
               ),
             ),)
     );
+
   }
 
   @override
@@ -458,7 +667,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       updateListView();
     }
 
-    return _authorized == 'Authorized' ? _mainBody(height,width,aspectRatio) : _biometrics();
+    return _authorized == 'Authorized' ? _mainBody(height,width,aspectRatio) : _biometrics(height,width,aspectRatio);
   }
 
 }
@@ -562,7 +771,7 @@ class DataSearch extends SearchDelegate<String>{
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return null;
+    return null;//CardDetail(context, 'Edit card', appColors[1]);
   }
 
   @override
@@ -581,8 +790,7 @@ class DataSearch extends SearchDelegate<String>{
           leading: Icon(Icons.note,color: Colors.indigoAccent,),
           title: Text(suggestionsList[index].account),
           onTap: (){
-            openCard(this.noteList[index], "Edit card", appColors[1],context);
-
+            openCard(suggestionsList[index], "Edit card", appColors[1],context);
           },
         ),
     itemCount: suggestionsList.length,);
