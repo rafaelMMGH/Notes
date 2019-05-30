@@ -61,9 +61,10 @@ class CardDetailState extends State<CardDetail> {
         _accountValidate = true;
         _passwordValidate = false;
 
-      }else if(passwordController.text.isEmpty){
+      }else if(passwordController.text.length < 4 ){
         _accountValidate = false;
         _passwordValidate = true;
+        passwordController.text = "";
       }else{
         _save();
       }
@@ -193,8 +194,8 @@ class CardDetailState extends State<CardDetail> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                   borderRadius: new BorderRadius.only(
-                      topLeft: const Radius.circular(15.0),
-                      topRight:  const Radius.circular(15.0)),),
+                      topLeft: const Radius.circular(20.0),
+                      topRight:  const Radius.circular(20.0)),),
                 child: new MyBottomSheetDialog(length: length,),
               )
 
@@ -324,7 +325,7 @@ class CardDetailState extends State<CardDetail> {
                                 suffixIcon: IconButton(icon: Icon(Icons.scatter_plot),color: Colors.black,onPressed: (){ _showModalGeneratePassword(context); },),
                                 labelText: 'Password',
                                 labelStyle: textStyle,
-                                errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
+                                errorText: _passwordValidate ? 'Enter at least four characters' : null,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.transparent,),borderRadius: BorderRadius.circular(6.0)
                                 ),

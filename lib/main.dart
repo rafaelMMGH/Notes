@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Lato',
           primaryColor: Colors.white,
           hintColor: Colors.transparent,
-          canvasColor: Colors.white,
+          canvasColor: Colors.transparent,
       ),
       home: Splash(),
     );
