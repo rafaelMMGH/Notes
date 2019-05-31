@@ -121,26 +121,6 @@ class CardDetailState extends State<CardDetail> {
     }
   }
 
-  void _delete() async{
-
-    moveToLastScreen();
-
-    //Case I: If user is trying to delete the NEW Card i.e. he has come to
-    //the detail page by pressing the FAB of CardList page.
-    if(note.id == null){
-      _showAlert('Error', 'No Card was deleted');
-      return;
-    }
-
-    //Case II: User is trying to delete a existing card that already  has a valid ID.
-    int result = await helper.removeNote(note.id);
-    if(result != 0)
-      _showAlert('Deleted', 'Note Deleted successfully.');
-    else
-      _showAlert('Error','Error ocurred while deleting note');
-
-  }
-
   void _showAlert(String title, String message){
     showDialog(
         context: context,
@@ -189,7 +169,6 @@ class CardDetailState extends State<CardDetail> {
         context: context,
         builder: (BuildContext context){
           return Container(
-              color: Color.fromRGBO(117,117, 117, 1.0),
               child: new Container(
                 decoration: new BoxDecoration(
                   color: Colors.white,

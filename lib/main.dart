@@ -230,10 +230,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   Widget _passwordButtons(String number){
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
-    final double aspectRatio = MediaQuery.of(context).devicePixelRatio;
-
     setState(() {
 
         aux.add(number);
@@ -465,6 +461,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       debugShowCheckedModeBanner: false,
         home: Container(
             child: Scaffold(
+              backgroundColor: Colors.white,
               body: ConstrainedBox(
                   constraints: const BoxConstraints.expand(),
                   child: Column(
@@ -785,7 +782,10 @@ class DataSearch extends SearchDelegate<String>{
     final suggestionsList = query.isEmpty ?  noteList : noteList.where((p) => p.account.toString().startsWith(query)).toList();
 
     // TODO: implement buildSuggestions
-    return ListView.builder(
+    return new Container(
+      color: Colors.white,
+      child: ListView.builder(
+
         itemBuilder: (context, index) => ListTile(
           leading: Icon(Icons.note,color: Colors.indigoAccent,),
           title: Text(suggestionsList[index].account),
@@ -793,7 +793,8 @@ class DataSearch extends SearchDelegate<String>{
             openCard(suggestionsList[index], "Edit card", appColors[1],context);
           },
         ),
-    itemCount: suggestionsList.length,);
+        itemCount: suggestionsList.length,),
+    );
   }
 
 }
